@@ -14,15 +14,14 @@ public class BoundedStack {
      */
 
     private final int[] carArea;
-    private int size;
+    private int count;
     //carArea คือ array ที่เก็บรหัสรถที่จอดอยู่ในลานจอดรถ
     //size คือจำนวนรถที่จอดอยู่ในลานจอดรถ
-	public int top;
 
     private void checkRep() {
         assert carArea != null;
-        assert size >= 0 && size <= carArea.length;
-        for (int i = 0; i < size; i++) {
+        assert count >= 0 && count <= carArea.length;
+        for (int i = 0; i < count; i++) {
             assert carArea[i] > 0 : "เลขรถต้องเป็นค่าบวกเท่านั้น";
         }
     }
@@ -32,9 +31,18 @@ public class BoundedStack {
             throw new IllegalArgumentException("ความจุของลานจอดรถต้องมากกว่า 0");
         }
         this.carArea = new int[capacity];
-        this.size = 0;
+        this.count = 0;
         checkRep();
     }
+
+    public BoundedStack(BoundedStack other) {
+    if (other == null) {
+        throw new IllegalArgumentException("ต้นฉบับที่จะ copy ต้องไม่เป็น null");
+    }
+    this.carArea = other.carArea.clone();
+    this.count = other.count;
+    checkRep();
+}
 
     public void push(int carId) {
         if (carId <= 0) {
@@ -43,19 +51,21 @@ public class BoundedStack {
         if (isFull()) {
             throw new IllegalStateException("ลานจอดรถเต็ม");
         }
-        carArea[size] = carId;
-        size++;
+        carArea[count] = carId;
+        count++;
         checkRep();
     }
+
+    
 
     public int remove() {
         if (isEmpty()) {
             throw new IllegalStateException("ลานจอดรถว่าง");
         }
-        size--;
-        int carId = carArea[size];
-        carArea[size] = 0; // เคลียร์ช่องจอด
-        checkRep(); 
+        count--;
+        int carId = carArea[count];
+        carArea[count] = 0; // เคลียร์ช่องจอด
+        checkRep();
         return carId;
     }
 
@@ -64,19 +74,19 @@ public class BoundedStack {
             throw new IllegalStateException("ที่จอดรถว่าง");
         }
         checkRep();
-        return carArea[size - 1];
+        return carArea[count - 1];
     }
 
-    public int count() {
+    public int size() {
         checkRep();
-        return size;
+        return count;
     }
 
     public boolean isFull() {
-        return size == carArea.length;
+        return count == carArea.length;
     }
 
     public boolean isEmpty() {
-        return size == 0;
+        return count == 0;
     }
 }
