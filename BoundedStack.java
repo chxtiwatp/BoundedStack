@@ -5,13 +5,18 @@
 public class BoundedStack {
 
     /* Abstraction Function(AF):
-     *   AF(carArea, size) = ลานจอดรถที่มีรถจอดอยู่ size คัน โดยรถคันแรก (ลึกสุด) อยู่ที่ carArea[0] 
-     *   และรถคันล่าสุด (ปากทางออก) อยู่ที่ carArea[size-1]
+     *   AF(carArea, count) = ลานจอดรถที่มีรถจอดอยู่ count คัน โดยรถคันแรก (ลึกสุด) อยู่ที่ carArea[0] 
+     *   และรถคันล่าสุด (ปากทางออก) อยู่ที่ carArea[count-1]
      * 
      * Representation Invariant(RI):
-     *   RI: carArea != null && 0 <= size && size <= carArea.length
-     *   และ carArea[0..size-1] > 0 (รหัสรถต้องมีค่าบวกเท่านั้น)
+     *   RI: carArea != null && 0 <= count && count <= carArea.length
+     *   และ carArea[0..count-1] > 0 (รหัสรถต้องมีค่าบวกเท่านั้น)
      */
+
+    //Creator: BoundedStack(int capacity)
+    //Producer: BoundedStack(BoundedStack other) (สร้าง Object ใหม่จากอันเดิม)
+    //Mutator: push(int carId), remove()
+    //Observer: top(), size(), isFull(), isEmpty()
 
     private final int[] carArea;
     private int count;
@@ -25,7 +30,11 @@ public class BoundedStack {
             assert carArea[i] > 0 : "เลขรถต้องเป็นค่าบวกเท่านั้น";
         }
     }
-
+    /**
+     * สร้างลานจอดรถตามความจุที่กำหนด
+     * @param capacity ความจุของ ลานจอดรถต้องมากกว่า 0
+     * @throws IllegalArgumentException capacity <= 0
+     */
     public BoundedStack(int capacity) {
         if (capacity <= 0) {
             throw new IllegalArgumentException("ความจุของลานจอดรถต้องมากกว่า 0");
@@ -35,15 +44,26 @@ public class BoundedStack {
         checkRep();
     }
 
+    /**
+     * คัดลอกสร้างลานจอดรถใหม่จากต้นฉบับ
+     * @param other BoundedStack ต้นฉบับที่ต้องการคัดลอก 
+     * @throws IllegalArgumentException other == null
+     */
     public BoundedStack(BoundedStack other) {
     if (other == null) {
-        throw new IllegalArgumentException("ต้นฉบับที่จะopy ต้องไม่เป็น null");
+        throw new IllegalArgumentException("ต้นฉบับที่จะ copy ต้องไม่เป็น null");
     }
     this.carArea = other.carArea.clone();
     this.count = other.count;
     checkRep();
 }
 
+    /**
+     * เลขรถต้องเป็นค่าบวก
+     * @param carId หมายเลขรถ
+     * @throws IllegalArgumentException carId <= 0
+     * @throws IllegalStateException ถ้าลานจอดรถเต็ม
+     */
     public void push(int carId) {
         if (carId <= 0) {
             throw new IllegalArgumentException("เลขรถต้องเป็นค่าบวกเท่านั้น");
@@ -57,7 +77,11 @@ public class BoundedStack {
     }
 
     
-
+    /**
+     * นำรถคันล่าสุด (ปากทางออก) ออกจากลานจอดรถ
+     * @return carId หมายเลขรถที่ถูกนำออกไป
+     * @throws IllegalStateException ถ้าลานจอดรถว่าง
+     */
     public int remove() {
         if (isEmpty()) {
             throw new IllegalStateException("ลานจอดรถว่าง");
@@ -69,6 +93,11 @@ public class BoundedStack {
         return carId;
     }
 
+    /**
+     * เช็ครถคันที่จอดล่าสุด
+     * @return รหัสสหมายเลขรถคันล่าสุดที่จอด
+     * @throws IllegalStateException ถ้าลานจอดว่างจะโยนException
+     */
     public int top() {
         if (isEmpty()) {
             throw new IllegalStateException("ที่จอดรถว่าง");
@@ -77,15 +106,30 @@ public class BoundedStack {
         return carArea[count - 1];
     }
 
+
+    /**
+     * จำนวนรถที่จอดอยู่ในลานจอดรถปัจจุบัน
+     * @return จำนวนรถปัจจุบันที่อยู่ในลานจอดรถ
+     */
     public int size() {
         checkRep();
         return count;
     }
 
+
+    /**
+     * ตรวจสอบว่าลานจอดรถเต็มหรือไม่
+     * @return true ถ้าลานจอดรถเต็ม , false ถ้าลานจอดรถไม่เต็ม
+     */
     public boolean isFull() {
         return count == carArea.length;
     }
 
+
+    /**
+     * ตรวจสอบว่าลานจอดรถว่างหรือไม่
+     * @return  true ถ้าลานจอดรถว่าง , false ถ้าลานจอดรถไม่ว่าง 
+     */
     public boolean isEmpty() {
         return count == 0;
     }
