@@ -37,7 +37,7 @@ public class BoundedStack {
 
     public BoundedStack(BoundedStack other) {
     if (other == null) {
-        throw new IllegalArgumentException("ต้นฉบับที่จะ copy ต้องไม่เป็น null");
+        throw new IllegalArgumentException("ต้นฉบับที่จะopy ต้องไม่เป็น null");
     }
     this.carArea = other.carArea.clone();
     this.count = other.count;

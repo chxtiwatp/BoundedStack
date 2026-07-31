@@ -22,19 +22,19 @@ public class BoudedStackTest {
 
         //เทสค่าปกติ
         BoundedStack stack = new BoundedStack(1);
-        check("ลานจอดรถต้องไม่เป็นค่า null",stack!=null); 
-        check("รถที่จอดอยู่ต้องมีจำนวนน้อยกว่าความจุในลานจอดรถ",stack.size()<1);
+        check("ลานจอดรถต้องไม่เป็นค่า null",stack!=null); //ลานจอดรถต้องไม่เป็นค่า null
+        check("รถที่จอดอยู่ต้องมีจำนวนน้อยกว่าความจุในลานจอดรถ",stack.size()<1); //รถที่จอดอยู่ต้องมีจำนวนน้อยกว่าความจุในลานจอดรถ
 
         try {
             new BoundedStack(0);
-            check("ความจุของลานจอดรถต้องมากกว่า 0", false);
+            check("ความจุของลานจอดรถต้องมากกว่า 0", false); //ความจุของลานจอดรถเท่ากับ 0 ต้องโยน Exception
         } catch (IllegalArgumentException e) {
             check("ความจุของลานจอดรถต้องมากกว่า 0", true);  
         }
         
         try {
             new BoundedStack(-1);
-            check("ความจุลานจอดรถต้องไม่เป็นค่าลบ", false);
+            check("ความจุลานจอดรถต้องไม่เป็นค่าลบ", false); //ความจุลานจอดรถหากเป็นค่าลบ ต้องโยน exception
         } catch (IllegalArgumentException e) {
             check("ความจุลานจอดรถต้องไม่เป็นค่าลบ", true);  
         }
@@ -43,56 +43,75 @@ public class BoudedStackTest {
         original.push(001);     
         original.push(002);
         
-        BoundedStack copy = new BoundedStack(original);
+       BoundedStack copy = new BoundedStack(original);
         check("ต้นฉบับต้องไม่เท่ากับnull", original != null);
         check("ขนาดที่ก็อปมาต้องมีค่าเท่ากับต้นฉบับ", copy.size()==original.size());
         check("รถคันล่าสุดต้องเท่ากับคันล่าสุดของต้นฉบับ", copy.top()==original.top());
+        copy.push(003);
+        check("จำนวนรถในลานจอดรถของ copy  มี 3คัน", copy.size()==3); //จำนวนรถในลานจอดรถของ copy  มี 3คัน
+        check("จำนวนรถในลานจอดรถของต้นฉบับ มี 2 คัน", original.size()==2); //จำนวนรถในลานจอดรถของต้นฉบับ มี 2 คัน
+
+        try {
+            new BoundedStack((BoundedStack)null);
+            check("ต้นฉบับที่จะcopy ต้องไม่เป็น null", false); //ถ้าคัดลอกลานจอดรถเป็น null ต้องโยน exception
+        } catch (IllegalArgumentException e) {
+            check("ต้นฉบับที่จะcopy ต้องไม่เป็น null", true);
+        }
 
         try {
             stack.push(-1);
-            check("เลขรถต้องเป็นค่าบวกเท่านั้น", false);
+            check("เลขรถต้องเป็นค่าบวกเท่านั้น", false); //เลขของรถที่รับค่ามาต้องเป็นค่าบวกเท่านั้น
         } catch (IllegalArgumentException e) {
             check("เลขรถต้องเป็นค่าบวกเท่านั้น", true);
         }
 
-        BoundedStack fullmai = new BoundedStack(1);
+        BoundedStack fullmai = new BoundedStack(1); 
         fullmai.push(001);
-        check("ลานจอดรถเต็ม", fullmai.isFull());
+        check("ลานจอดรถเต็ม", fullmai.isFull()); //เช็คว่าลานจอดรถเต็มไหม
 
         try {
             fullmai.push(002);
-            check("ไม่สามารถจอดเพิ่มได้", false);
+            check("ไม่สามารถจอดเพิ่มได้", false); //เช็คว่าจอดเพิ่มได้ไหมถ้าจอดเพิ่มไม่ได้ให้โยน exception
         } catch (IllegalStateException e) {
             check("ไม่สามารถจอดเพิ่มได้", true);
         }
 
-        BoundedStack removed = new BoundedStack(1);
+        BoundedStack removed = new BoundedStack(1); 
         removed.push(001);
         removed.remove();
-        check("ลานจอดรถว่าง", removed.size()==0);
+        check("ลานจอดรถว่าง", removed.size()==0); //เช็คว่าหลังเอารถออกจากลานแล้วมีพื้นที่ว่างไหม
 
         try {
             removed.remove();
-            check("ไม่มีรถให้เอาออกแล้ว", false);
+            check("ไม่มีรถให้เอาออกแล้ว", false); //หากไม่มีรถจอดอยู่อยู่แล้วให้โยน exception
         } catch (IllegalStateException e) {
             check("ไม่มีรถให้เอาออกแล้ว", true);
         }
 
-        BoundedStack topped = new BoundedStack(2);
+        BoundedStack topped = new BoundedStack(2); 
         topped.push(456);
         topped.push(123);
-        check("แสดงรถคันล่าสุด", topped.top()==123);
+        check("แสดงรถคันล่าสุด", topped.top()==123); //แสดงรถที่มาจอดคันล่าสุด
+        BoundedStack stackempty = new BoundedStack(2);
+        try {
+            stackempty.top();
+            check("ดึงรถคันล่าสุดจากลานว่าง", false); //เช็คข้อมูลว่าในลานมีรถคันล่าสุดจอดอยู่ไหมถ้าไม่ให้โยน exception
+        } catch (IllegalStateException e) {
+            check("ดึงรถคันล่าสุดจากลานว่าง", true);
+        }
         
         BoundedStack sized = new BoundedStack(1);
         sized.push(1);
-        check("", sized.size()==1);
+        check("เช็คว่ามีรถมาจอดในลานกี่คัน", sized.size()==1); //เช็คว่าตอนนี้มีรถมาจอดในลานจอดรถกี่คัน
 
         BoundedStack fulled = new BoundedStack(1);
         fulled.push(1);
-        check("", fulled.isFull());
+        check("เช็คว่าตอนนี้มีรถมาจอดในลานเต็มรึยัง", fulled.isFull()); //เช็คว่าตอนนี้มีรถมาจอดในลานจอดรถเต็มรึยัง
 
         BoundedStack empted = new BoundedStack(1);
-        check("", empted.isEmpty());
+        check("เช็คว่าลานจอดรถว่างไหม", empted.isEmpty()); //เช็คว่าลานจอดรถว่างไหม
+
+
 
         System.out.println("==================================");
         System.out.printf("PASS %d / FAIL %d%n", pass, fail);
