@@ -10,13 +10,14 @@ public class BoundedStack {
      * 
      * Representation Invariant(RI):
      *   RI: carArea != null && 0 <= size && size <= carArea.length
-     *   และ carArea[0..size-1] > 0 (รหัสรถต้องเป็นจำนวนเต็มบวก)
+     *   และ carArea[0..size-1] > 0 (รหัสรถต้องมีค่าบวกเท่านั้น)
      */
 
     private final int[] carArea;
     private int size;
     //carArea คือ array ที่เก็บรหัสรถที่จอดอยู่ในลานจอดรถ
     //size คือจำนวนรถที่จอดอยู่ในลานจอดรถ
+	public int top;
 
     private void checkRep() {
         assert carArea != null;
@@ -35,7 +36,7 @@ public class BoundedStack {
         checkRep();
     }
 
-    public void parkCar(int carId) {
+    public void push(int carId) {
         if (carId <= 0) {
             throw new IllegalArgumentException("เลขรถต้องเป็นค่าบวกเท่านั้น");
         }
@@ -47,26 +48,26 @@ public class BoundedStack {
         checkRep();
     }
 
-    public int driveOutCar() {
+    public int remove() {
         if (isEmpty()) {
             throw new IllegalStateException("ลานจอดรถว่าง");
         }
         size--;
         int carId = carArea[size];
         carArea[size] = 0; // เคลียร์ช่องจอด
-        checkRep();
+        checkRep(); 
         return carId;
     }
 
-    public int peekFrontCar() {
+    public int top() {
         if (isEmpty()) {
-            throw new IllegalStateException("Parking lot is empty");
+            throw new IllegalStateException("ที่จอดรถว่าง");
         }
         checkRep();
         return carArea[size - 1];
     }
 
-    public int carCount() {
+    public int count() {
         checkRep();
         return size;
     }
